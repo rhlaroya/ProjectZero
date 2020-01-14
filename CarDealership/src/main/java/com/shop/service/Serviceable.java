@@ -4,7 +4,9 @@
  */
 package com.shop.service;
 
-public interface Serviceable {
+import java.util.List;
+
+public interface Serviceable <C> {
 	
 	//make an offer to purchase a car
 	public abstract void makeOffer();
@@ -12,4 +14,14 @@ public interface Serviceable {
 	public abstract void viewPayments();
 	//registration for customer account by user
 	public abstract void register();
+	
+	List <C> FindAll();
+	
+	C findById(int id);
+	
+	List<C> findAllByTitle();
+	
+	void insert(C c);
+	
+	void delete(C c);
 }

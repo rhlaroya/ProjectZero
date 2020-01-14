@@ -13,9 +13,14 @@ package com.shop.model;
  */
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+import com.shop.data.ConnectionUtil;
 import com.shop.data.Serialization;
 import com.shop.service.CarService;
 import com.shop.service.Serviceable;
@@ -32,6 +37,7 @@ public class Customer extends User implements Serializable, Serviceable {
 	private String firstName;
 	private String lastName;
 	private double money_balance;
+	Scanner kbd = new Scanner(System.in);
 	
 	/**
 	 * Getters and Setters
@@ -172,6 +178,52 @@ public class Customer extends User implements Serializable, Serviceable {
 		customers.add(c);
 		String filename = "customers.txt";
 		s.writeCustomerList(filename, customers);
+		
+	}
+	public List<Customer> FindAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Object findById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List findAllByTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void insert(Object c) {
+		try {
+			Customer cu = new Customer();
+			Connection conn = ConnectionUtil.connect();
+			System.out.println("CUSTOMER REGISTRATION");
+			System.out.println("Please enter the following information: ");
+			System.out.println("Username: ");
+			cu.setUser_name(kbd.next());
+			System.out.println("Password: ");
+			cu.setPassword(kbd.next());
+			System.out.println("First name: ");
+			cu.setFirstName(kbd.next());
+			System.out.println("Last name: ");
+			kbd.nextLine();
+			cu.setLastName(kbd.nextLine());
+			System.out.println("Money Balance: ");
+			cu.setMoney_balance(kbd.nextDouble());
+			String sql = "insert into \"customer\" values("+ cu.getUser_name() + ",'" + cu.getPassword() + "','" + cu.getFirstName() + "','" + cu.getLastName() + "," + cu.getMoney_balance() + "')";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int ins = ps.executeUpdate();
+			System.out.println("Thank you! Customer Account Created");
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	@Override
+	public void delete(Object c) {
+		// TODO Auto-generated method stub
 		
 	}
 	

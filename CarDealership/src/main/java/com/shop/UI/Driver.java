@@ -24,12 +24,12 @@ public class Driver  {
 	final static Logger logger = Logger.getLogger("log: ");
 	
 	public static void main(String[] args) {
-		System.out.println("insert into \"car\" values ("+ "12" + "," + "23" + "," + "adfad" + "," + "adfasdf" + ")");
+//		System.out.println("insert into \"car\" values ("+ "12" + "," + "23" + "," + "adfad" + "," + "adfasdf" + ")");
 		//shows all employees
-		EmployeeService es = new EmployeeService();
-		List<Employee> list = es.getList();
-		String liststr = list.toString().replace(",", "");
-		System.out.println(liststr);
+//		EmployeeService es = new EmployeeService();
+//		List<Employee> list = es.getList();
+//		String liststr = list.toString().replace(",", "");
+//		System.out.println(liststr);
 		
 		//shows all cars
 		
