@@ -135,7 +135,7 @@ public class Customer extends User implements Serializable, Serviceable {
 	@Override
 	public void makeOffer() {
 		Offer off = new Offer();
-		off.revealOffer();
+		off.insert(off);
 	}
 	
 	/**

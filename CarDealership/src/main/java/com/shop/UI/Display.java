@@ -181,9 +181,10 @@ public static void showManagerMenu() {
 		System.out.println("(2) View car offers");
 		System.out.println("(3) Add a car to the lot");
 		System.out.println("(4) Remove a car from the lot");
-		System.out.println("(5) Add an employee");
-		System.out.println("(6) Fire an employee");
-		System.out.println("(7) Go Back to previous");
+		System.out.println("(5) View list of employees");
+		System.out.println("(6) Add an employee");
+		System.out.println("(7) Fire an employee");
+		System.out.println("(8) Go Back to previous");
 		
 		try {
 			int emch = kbd.nextInt();
@@ -203,15 +204,19 @@ public static void showManagerMenu() {
 				Employee e = new Employee();
 				e.removeCar();
 				showManagerMenu();
-			} else if (emch == 5) {
+			} else if(emch == 5)  {
+				Employee e = new Employee();
+				e.viewAllEmployees();
+				showManagerMenu();
+			} else  if (emch == 6) {
 				Employee e = new Employee();
 				e.addEmployee();
 				showManagerMenu();
-			} else if (emch == 6 ) {
+			} else if (emch == 7 ) {
 				Employee e = new Employee();
-				e.addEmployee();
+				e.delete(e);
 				showManagerMenu();
-			} else if (emch == 7) {
+			} else if (emch == 8) {
 				showMenu();
 			} else {
 				System.out.println("Invalid Number");
@@ -258,8 +263,7 @@ public static void showManagerMenu() {
 		System.out.println("(2) View car offers");
 		System.out.println("(3) Add a car to the lot");
 		System.out.println("(4) Remove a car from the lot");
-		System.out.println("(5) Add an employee");
-		System.out.println("(6) Go Back to previous");
+		System.out.println("(5) Go Back to previous");
 		
 		try {
 			int emch = kbd.nextInt();
@@ -279,11 +283,7 @@ public static void showManagerMenu() {
 				Employee e = new Employee();
 				e.removeCar();
 				showEmployeeMenu();
-			} else if (emch == 5) {
-				Employee e = new Employee();
-				e.addEmployee();
-				showEmployeeMenu();
-			} else if (emch == 6) {
+			}  else if (emch == 5) {
 				showMenu();
 			} else {
 				System.out.println("Invalid Number");

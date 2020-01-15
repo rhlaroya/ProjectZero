@@ -26,6 +26,8 @@ import com.shop.data.Serialization;
 import com.shop.data.ConnectionUtil;
 import com.shop.service.CarService;
 import com.shop.service.Employable;
+import com.shop.service.EmployeeService;
+import com.shop.service.OfferService;
 import com.shop.service.User;
 
 public class Employee extends User implements Serializable, Employable {
@@ -203,20 +205,24 @@ public class Employee extends User implements Serializable, Employable {
 	public void viewOffer() {
 
 		System.out.println("OFFERS: ");
-		Serialization s = new Serialization();
-		int y;
-		System.out.println(s.readOffer("offers.txt") + " for " + s.readCarList("cars.txt"));
-		System.out.println("\n"+"(1) Accept offer");
-	    System.out.println("(2) Reject offer");
-	    y = kbd.nextInt();
-	    if(y == 1) {
-	    	System.out.println("Offer accepted successfully");
-	    	Offer fer = new Offer();
-	    	String file = "payments.txt";
-	    	s.writePayment(file, fer.pay);
-	    } else if (y == 2) {
-	    	System.out.println("Offer rejected successfully");
-	    }
+		OfferService os = new OfferService();
+		List<Offer> lists = os.getList();
+		String liststrs = lists.toString().replace(",", "");
+		System.out.println(liststrs);
+//		Serialization s = new Serialization();
+//		int y;
+//		System.out.println(s.readOffer("offers.txt") + " for " + s.readCarList("cars.txt"));
+//		System.out.println("\n"+"(1) Accept offer");
+//	    System.out.println("(2) Reject offer");
+//	    y = kbd.nextInt();
+//	    if(y == 1) {
+//	    	System.out.println("Offer accepted successfully");
+//	    	Offer fer = new Offer();
+//	    	String file = "payments.txt";
+//	    	s.writePayment(file, fer.pay);
+//	    } else if (y == 2) {
+//	    	System.out.println("Offer rejected successfully");
+//	    }
 	}
 
 	/**
@@ -228,23 +234,26 @@ public class Employee extends User implements Serializable, Employable {
 	 */
 	@Override
 	public void addEmployee() {
-		Employee e = new Employee();
-		System.out.println("ADDING NEW EMPLOYEE");
-		System.out.println("Fill up the necessary information");
-		System.out.println("Username: ");
-		e.setUser_name(kbd.next());
-		System.out.println("Password: ");
-		e.setPassword(kbd.next());
-		System.out.println("First name: ");
-		e.setFirstName(kbd.next());
-		System.out.println("Last name: ");
-		kbd.nextLine();
-		e.setLastName(kbd.nextLine());
-		employees.add(e);
-		System.out.println("A new employee has been added.");
-		String filename = "employees.txt";
-		Serialization s = new Serialization();
-		s.writeEmployeeList(filename, employees);
+//		Employee e = new Employee();
+//		System.out.println("ADDING NEW EMPLOYEE");
+//		System.out.println("Fill up the necessary information");
+//		System.out.println("Username: ");
+//		e.setUser_name(kbd.next());
+//		System.out.println("Password: ");
+//		e.setPassword(kbd.next());
+//		System.out.println("First name: ");
+//		e.setFirstName(kbd.next());
+//		System.out.println("Last name: ");
+//		kbd.nextLine();
+//		e.setLastName(kbd.nextLine());
+//		employees.add(e);
+//		System.out.println("A new employee has been added.");
+//		String filename = "employees.txt";
+//		Serialization s = new Serialization();
+//		s.writeEmployeeList(filename, employees);
+		
+		Employee em = new Employee();
+		em.insert(em);
 		
 	}
 	@Override
@@ -266,6 +275,7 @@ public class Employee extends User implements Serializable, Employable {
 		}
 			return null;
 			
+			
 	}
 	@Override
 	public Object findById(int id) {
@@ -279,17 +289,68 @@ public class Employee extends User implements Serializable, Employable {
 	}
 	@Override
 	public void insert(Object e) {
-//		try {
-//			Connection conn = ConnectionUitl.connect();
-//			String sql = "delete from \"employee"
-//		} catch(SQLException se) {
-//			se.printStackTrace();
-//		}
-//		
+	try {
+		Employee em = new Employee();
+		Connection conn = ConnectionUtil.connect();
+		System.out.println("ADDING NEW EMPLOYEE");
+		System.out.println("Fill up the necessary information");
+		System.out.println("Username: ");
+		em.setUser_name(kbd.next());
+		System.out.println("Password: ");
+		em.setPassword(kbd.next());
+		System.out.println("First name: ");
+		em.setFirstName(kbd.next());
+		System.out.println("Last name: ");
+		kbd.nextLine();
+		em.setLastName(kbd.nextLine());
+		String sql = "insert into \"employee\" values('"+ em.getUser_name() + "','" + em.getPassword() + "','" + em.getFirstName() + "','" + em.getLastName() + "')";
+		
+		PreparedStatement ps = conn.prepareStatement(sql);
+		int ins = ps.executeUpdate();
+		System.out.println("A new employee has been added.");
+		} catch (SQLException ei) {
+			ei.printStackTrace();
+		}	
+		
+//		Car ca = new Car();
+//		Connection conn = ConnectionUtil.connect();
+//		System.out.println("Enter the car make");
+//		ca.setMake(kbd.next());
+//		System.out.println("Enter the model");
+//		ca.setName(kbd.next());
+//		System.out.println("Enter the price of the car");
+//		ca.setPrice(kbd.nextDouble());
+//		System.out.println("Enter the specs");
+//		kbd.nextLine();
+//		ca.setSpecs(kbd.nextLine());
+//		String sql = "insert into \"car\" values("+ ca.getPrice() + ",'" + ca.getMake() + "','" + ca.getName() + "','" + ca.getSpecs() + "')";
+//		PreparedStatement ps = conn.prepareStatement(sql);
+//		int ins = ps.executeUpdate();
+//		System.out.println("Car successfully removed");
+//		} catch (SQLException ei) {
+//			ei.printStackTrace();
+//		}	
 	}
 	@Override
 	public void delete(Object e) {
-		// TODO Auto-generated method stub
+		try {
+			Connection conn = ConnectionUtil.connect();
+			System.out.println("Enter the ID number to fire an employee");	
+			String employeeid = kbd.nextLine();
+			String sql = "delete from \"employee\" where employeeid = "+ employeeid +"";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int rs = ps.executeUpdate();
+			System.out.println("Employee successfully removed");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		
+	}
+	
+	public void viewAllEmployees() {
+		EmployeeService es = new EmployeeService();
+		List<Employee> list = es.getList();
+		String liststr = list.toString().replace(",", "");
+		System.out.println(liststr);
 	}
 }

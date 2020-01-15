@@ -145,7 +145,7 @@ public class Car implements Automotive, Serializable {
 		String sql = "insert into \"car\" values("+ ca.getPrice() + ",'" + ca.getMake() + "','" + ca.getName() + "','" + ca.getSpecs() + "')";
 		PreparedStatement ps = conn.prepareStatement(sql);
 		int ins = ps.executeUpdate();
-		System.out.println("Car successfully removed");
+		System.out.println("Car successfully placed on the lot");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -155,7 +155,7 @@ public class Car implements Automotive, Serializable {
 	public void delete(Object c) {
 		try {
 		Connection conn = ConnectionUtil.connect();
-		System.out.println("Enter the car number to remove car from lot");	
+		System.out.println("Enter the car id to remove car from lot");	
 		String carno = kbd.nextLine();
 		String sql = "delete from \"car\" where carid = "+ carno +"";
 		PreparedStatement ps = conn.prepareStatement(sql);
