@@ -192,7 +192,7 @@ public class Offer implements Offerable {
 	public List FindAll() {
 		try {
 			Connection conn = ConnectionUtil.connect();
-			String sql = "select * from \"offer\" where \"sold\" = 'false'";
+			String sql = "select * from \"offer\" where \"status\" = 'false'";
 			List<Offer> list = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
@@ -315,10 +315,13 @@ public class Offer implements Offerable {
 					+ "and carid = (select carid from offer where offerid= "+rem+")";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int rs = ps.executeUpdate();
-			sql = "update car set ownerid = (select offeror from offer where carid = "+rem+") where carid = "+rem;
+			sql = "update car set ownerid = (select offeror from offer where offerid = "+rem+") where carid = "+"(select carid from offer where offerid =" +rem+")";
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeUpdate();
-			sql = "update offer set sold = true where carid = "+rem;
+			sql = "update offer set status = true where carid = "+"(select carid from offer where offerid =" +rem+")";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeUpdate();
+			sql = "update car set sold = true where carid = "+"(select carid from offer where offerid="+rem+")";
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeUpdate();
 			System.out.println("Offer accepted successfully other offers for the car have been rejected");

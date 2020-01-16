@@ -143,23 +143,23 @@ public class Car implements Automotive, Serializable {
 	 * Finds the cars owned by a customer
 	 * then adds it into a list
 	 */
-	public List FindMine() {
+	public void FindMine() {
 		try {
+			System.out.print("Enter your username for confirmation: ");
 			String cmtn = kbd.next();
 			Connection conn = ConnectionUtil.connect();
 			String sql = "select * from \"car\" where ownerid = (select customerid from customer where user_name = '"+ cmtn +"') and sold = true;";
-			List<Car> mycar = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement(sql);
 			
 			ResultSet rs = ps.executeQuery();
+			Car akin = new Car();
 			while(rs.next()) {
-				mycar.add(new Car(rs.getDouble(1), rs.getString(2),rs.getString(3),rs.getString(4),rs.getInt(5),rs.getBoolean(6)));
+			akin =new Car(rs.getDouble(1), rs.getString(2),rs.getString(3),rs.getString(4),rs.getInt(5),rs.getBoolean(6));
 			}
-			return mycar;	
+			System.out.println(akin);	
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
 	}
 	
 	/**

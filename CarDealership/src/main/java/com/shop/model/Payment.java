@@ -174,23 +174,47 @@ public class Payment implements Payable {
 	 * Prints the payments of a customer
 	 * @return
 	 */
-	public List FindOwned() {
+	public void FindOwned() {
 		try {
-			System.out.println("Enter your username for confirmation");
+			
+			System.out.print("Enter your username for confirmation: ");
 			String pe = kbd.next();
 			Connection conn = ConnectionUtil.connect();
-			String sql = "select * from \"payment\" where payerid = "+pe;
-			List<Payment> mypays = new ArrayList<>();
+			String sql = "select * from \"payment\" where payerid = " + "(select customerid from customer where user_name = ?)";
+
 			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, pe);
 			ResultSet rs = ps.executeQuery();
+			
+			Payment pymt = null;
 			while(rs.next()) {
-				mypays.add(new Payment(rs.getDouble(1),rs.getTimestamp(2),rs.getDouble(3),rs.getDouble(4),rs.getInt(5),rs.getInt(6)));
+			pymt = new Payment(rs.getDouble(1),rs.getTimestamp(2),rs.getDouble(3),rs.getDouble(4),rs.getInt(5),rs.getInt(6));
 			}
-			return mypays;		
+			System.out.println(pymt.toString());
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		//		try {
+//			List<Payment> mypays = new ArrayList<>();
+//			
+//			System.out.print("Enter your username for confirmation: ");
+//			String pe = kbd.next();
+//			Connection conn = ConnectionUtil.connect();
+//			String sql = "select * from \"payment\" where payerid = " + "(select customerid from customer where user_name = ?) and sold = true";
+//
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.setString(1, pe);
+//			ResultSet rs = ps.executeQuery();
+//			
+//			while(rs.next()) {
+//				mypays.add(new Payment(rs.getDouble("monthly"),rs.getTimestamp("timepay"),rs.getDouble("paid"),rs.getDouble("remaining"),rs.getInt("payerid"),rs.getInt("carid")));
+//			}
+//			return mypays;		
+//		} catch(SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	/**

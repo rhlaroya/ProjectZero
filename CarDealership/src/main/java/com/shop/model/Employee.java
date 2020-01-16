@@ -235,9 +235,7 @@ public class Employee extends User implements Serializable, Employable{
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-			return null;
-			
-			
+			return null;	
 	}
 	
 	/**

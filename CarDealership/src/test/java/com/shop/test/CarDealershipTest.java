@@ -1,5 +1,6 @@
 package com.shop.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -36,32 +37,32 @@ public class CarDealershipTest {
 		LOGGER.info("Initialized Object");
 	}
 	
-	@Test
-	public void testViewCar() throws FileNotFoundException {
-		Car car = new Car();
-		car.setMake("BMW");
-		car.setName("i9");
-		car.setPrice(120000.00);
-		car.setSpecs("Dream car");
-		
-		List<Car> cars = new ArrayList<>();
-		cars.add(car);
-		assertNotNull(cars);
-		LOGGER.info("FileNotFoundException");
-	}
+//	@Test
+//	public void testViewCar() throws FileNotFoundException {
+//		Car car = new Car();
+//		car.setMake("BMW");
+//		car.setName("i9");
+//		car.setPrice(120000.00);
+//		car.setSpecs("Dream car");
+//		
+//		List<Car> cars = new ArrayList<>();
+//		cars.add(car);
+//		assertNotNull(cars);
+//		LOGGER.info("FileNotFoundException");
+//	}
+//	
+//	@Test
+//	public void testRegistration() {
+//		
+//		c.setUser_name("admin");
+//		c.setPassword("password");
+//		c.setFirstName("Arthur");
+//		c.setLastName("Fleck");
+//		c.setMoney_balance(1000000.00);
+//		List<Object> customers = new ArrayList<>();
+//		customers.add(c);
+//	}
 	
-	@Test
-	public void testRegistration() {
-		
-		c.setUser_name("admin");
-		c.setPassword("password");
-		c.setFirstName("Arthur");
-		c.setLastName("Fleck");
-		c.setMoney_balance(1000000.00);
-		List<Object> customers = new ArrayList<>();
-		customers.add(c);
-		assertNotNull(customers);
-	}
 	
 	@Test
 	public void testViewPayments() {

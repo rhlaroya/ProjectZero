@@ -12,8 +12,10 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.shop.data.ConnectionUtil;
+import com.shop.model.Car;
 import com.shop.model.Customer;
 import com.shop.model.Employee;
+import com.shop.model.Payment;
 
 public class Display  {
 	
@@ -279,12 +281,12 @@ public class Display  {
 			c.makeOffer();
 			showCustomerMenu();
 		} else if (csch == 3) {
-			Customer c =  new Customer();
-			c.viewPayments();
+			Payment pnt = new Payment();
+			pnt.FindOwned();;
 			showCustomerMenu();
 		} else if (csch == 4) {
-			Customer c = new Customer();
-			c.viewOwnedCars();
+			Car carr = new Car();
+			carr.FindMine();
 			showCustomerMenu();
 		} else if (csch == 5) {
 			showMenu();
