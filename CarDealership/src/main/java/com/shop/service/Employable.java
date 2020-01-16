@@ -25,13 +25,12 @@ public interface Employable <E> {
 	public abstract void viewOffer();
 	//add Employee
 	public abstract void addEmployee();
-	
+	//view payments for manager
+	public abstract void viewAllPayments();
+	//view all employees for manager
+	public abstract void viewAllEmployees();
 	
 	List <E> FindAll();
-	
-	E findById(int id);
-	
-	List<E> findAllByTitle();
 	
 	void insert(E e);
 	

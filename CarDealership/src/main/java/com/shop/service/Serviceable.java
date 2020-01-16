@@ -14,12 +14,10 @@ public interface Serviceable <C> {
 	public abstract void viewPayments();
 	//registration for customer account by user
 	public abstract void register();
+	//allows user to view cars
+	public abstract <C> void viewOwnedCars();
 	
 	List <C> FindAll();
-	
-	C findById(int id);
-	
-	List<C> findAllByTitle();
 	
 	void insert(C c);
 	

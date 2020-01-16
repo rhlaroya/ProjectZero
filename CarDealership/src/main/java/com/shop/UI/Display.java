@@ -8,21 +8,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-/**
- * The display class creates menus for the
- * User and specific one for either an employee
- * or a customer
- */
-
-import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.shop.data.ConnectionUtil;
-import com.shop.data.Serialization;
-import com.shop.model.Car;
 import com.shop.model.Customer;
 import com.shop.model.Employee;
 
@@ -85,28 +74,6 @@ public class Display  {
 				
 				break;
 				
-				
-//				Serialization s = new Serialization();
-//				List<Car> ems = s.readCarList("employees.txt");
-//				Object ploy = ems;
-//				String work = String.valueOf(ploy);
-//				String[] ar = work.split("[^a-zA-Z']+");
-//				String uname = ar[2];
-//				String pword = ar[3];
-////				LOGGER.info("Starting scanner inputs");
-//				System.out.println("Enter your user name");
-//				String user = kbd.next();
-//				System.out.println("Enter your password");
-//				String pass = kbd.next();
-//				
-//					if(user.equals(uname) && pass.equals(pword)) {
-//						showEmployeeMenu();
-//					} else {
-//						System.out.println("Incorrect Password");
-//						showMenu();
-//					}				
-//				break;
-				
 			case 2:
 				try {
 					Connection conn = ConnectionUtil.connect();
@@ -129,28 +96,6 @@ public class Display  {
 				} catch(SQLException e) {
 					e.printStackTrace();
 				}
-//				Serialization c = new Serialization();
-//
-//				List<Car> client = c.readCarList("customers.txt");
-//				Object buyer = client;
-//				work = String.valueOf(buyer);
-//				String[] cl = work.split("[^a-zA-Z']+");
-//				uname = cl[1];
-//			    pword = cl[2];
-//
-//				System.out.println("Enter your user name");
-//				String usa = kbd.next();
-//				System.out.println("Enter your password");
-//				String pas = kbd.next();
-//				
-//				if(usa.equals(uname) && pas.equals(pword)) {
-//					showCustomerMenu();
-//					
-//				} else {
-//					System.out.println("Incorrect Password");
-//					showMenu();
-//				}
-				
 				break;
 			case 3:
 				Customer ca = new Customer();
@@ -174,17 +119,24 @@ public class Display  {
 		}
 	}
 	
-public static void showManagerMenu() {
+	/**
+	 * Shows the manager menu. The
+	 * manager menu has a little more
+	 * functionalities compared to a
+	 * regular employee account
+	 */
+	public static void showManagerMenu() {
 		
 		System.out.println("\n" + "------Enter Number of Choice------");
 		System.out.println("(1) View cars on the lot");
 		System.out.println("(2) View car offers");
 		System.out.println("(3) Add a car to the lot");
 		System.out.println("(4) Remove a car from the lot");
-		System.out.println("(5) View list of employees");
-		System.out.println("(6) Add an employee");
-		System.out.println("(7) Fire an employee");
-		System.out.println("(8) Go Back to previous");
+		System.out.println("(5) View all car payments");
+		System.out.println("(6) View list of employees");
+		System.out.println("(7) Add an employee");
+		System.out.println("(8) Fire an employee");
+		System.out.println("(9) Go Back to previous");
 		
 		try {
 			int emch = kbd.nextInt();
@@ -204,19 +156,23 @@ public static void showManagerMenu() {
 				Employee e = new Employee();
 				e.removeCar();
 				showManagerMenu();
-			} else if(emch == 5)  {
+			} else if(emch == 5) {
+				Employee e = new Employee();
+				e.viewAllPayments();
+				showManagerMenu();
+			}	else if(emch == 6)  {
 				Employee e = new Employee();
 				e.viewAllEmployees();
 				showManagerMenu();
-			} else  if (emch == 6) {
+			} else  if (emch == 7) {
 				Employee e = new Employee();
 				e.addEmployee();
 				showManagerMenu();
-			} else if (emch == 7 ) {
+			} else if (emch == 8 ) {
 				Employee e = new Employee();
 				e.delete(e);
 				showManagerMenu();
-			} else if (emch == 8) {
+			} else if (emch == 9) {
 				showMenu();
 			} else {
 				System.out.println("Invalid Number");
@@ -227,9 +183,10 @@ public static void showManagerMenu() {
 	
 		}
 	}
-/**
- * Shows the manager menu
- */
+	
+	/**
+	 * Shows the manager menu
+	 */
 	public static void managerTrigger() {
 		try {
 			Connection conn = ConnectionUtil.connect();
@@ -263,7 +220,8 @@ public static void showManagerMenu() {
 		System.out.println("(2) View car offers");
 		System.out.println("(3) Add a car to the lot");
 		System.out.println("(4) Remove a car from the lot");
-		System.out.println("(5) Go Back to previous");
+		System.out.println("(5) View all car payments");
+		System.out.println("(6) Go Back to previous");
 		
 		try {
 			int emch = kbd.nextInt();
@@ -284,8 +242,13 @@ public static void showManagerMenu() {
 				e.removeCar();
 				showEmployeeMenu();
 			}  else if (emch == 5) {
-				showMenu();
-			} else {
+				Employee e = new Employee();
+				e.viewAllPayments();
+				showEmployeeMenu();
+			}
+				else if (emch == 6) {
+					showMenu();
+			}  else {
 				System.out.println("Invalid Number");
 				showEmployeeMenu();
 			}
@@ -303,7 +266,8 @@ public static void showManagerMenu() {
 		System.out.println("(1) View cars on the lot");
 		System.out.println("(2) Make an offer ");
 		System.out.println("(3) View payments");
-		System.out.println("(4) Go Back to previous");
+		System.out.println("(4) View cars that I own");
+		System.out.println("(5) Go Back to previous");
 		
 		int csch = kbd.nextInt();
 		if(csch == 1) {
@@ -319,6 +283,10 @@ public static void showManagerMenu() {
 			c.viewPayments();
 			showCustomerMenu();
 		} else if (csch == 4) {
+			Customer c = new Customer();
+			c.viewOwnedCars();
+			showCustomerMenu();
+		} else if (csch == 5) {
 			showMenu();
 		} else {
 			System.out.println("Invalid Number");

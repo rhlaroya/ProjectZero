@@ -28,17 +28,12 @@ public class Offer implements Offerable {
 	/**
 	 * Instance fields
 	 */
+	private int offerid;
 	private int monthsPay;
 	private int loanRate;
-	Scanner kbd = new Scanner(System.in);
-	int[] key = new int[1];
-	
-	static ArrayList<String> pay = new ArrayList<>();
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
-	Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-
-	
+	private Timestamp times;
+	private int offerorid;
+	private boolean status;
 	
 	/**
 	 * Getters and Setters
@@ -58,40 +53,69 @@ public class Offer implements Offerable {
 	public void setLoanRate(int loanRate) {
 		this.loanRate = loanRate;
 	}
-
 	
+	public int getOfferid() {
+		return offerid;
+	}
+
+	public void setOfferid(int offerid) {
+		this.offerid = offerid;
+	}
+	
+	public void setTimes(Timestamp times) {
+		this.times = times;
+	}
+	
+	public int getOfferorid() {
+		return offerorid;
+	}
+
+	public void setOfferorid(int offerorid) {
+		this.offerorid = offerorid;
+	}
+	
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	public Timestamp getTimes() {
+		return times;
+	}
+	
+	public void setTimes1(Timestamp times) {
+		this.times = times;
+	}
+
+	Scanner kbd = new Scanner(System.in);
+	int[] key = new int[1];
+	static ArrayList<String> pay = new ArrayList<>();
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+	Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 	
 	/**
 	 * No args constructor
 	 */
 	public Offer() {
 		super();
-	}
-	
-	
+	}	
 
 	/**
 	 * Offer constructor
 	 */
-	public Offer(int monthsPay, int loanRate, Scanner kbd) {
+	public Offer(int offerid, Timestamp times, int offerorid, int loanRate, int monthsPay, boolean status) {
 		super();
-		this.monthsPay = monthsPay;
-		this.loanRate = loanRate;
-		this.kbd = kbd;
-	}
-	
-	public Offer(int offer, String time, int offerorid, int loanRate, int monthsPay, boolean status) {
-		super();
-		int offr = offer;
-		String tm = time;
-		int offrrd = offerorid;
+		this.offerid = offerid;
+		this.times = times;
+		this.offerorid = offerorid;
 		this.loanRate = loanRate;
 		this.monthsPay = monthsPay;
-		boolean stts = status;
-		
+		this.status = status;		
 	}
 	
-
 	/**
 	 * This method show the functionality
 	 * to create an offer in the customer menu
@@ -102,20 +126,16 @@ public class Offer implements Offerable {
 		System.out.println("CREATING OFFER FOR: ");
 		Serialization s = new Serialization();
 		List<Car> cars = s.readCarList("cars.txt");
-		
 		for(Car c: cars) {
 			System.out.println(c.toString());
 		}
-		
 		String expectedNumber = "";
 		String[] ar = cars.toString().split("");
-			
 		for (int i = 0; i < ar.length;i++) {
 			if(Character.isDigit(cars.toString().charAt(i))) {
 				expectedNumber += ar[i-0]; 
 			} 
 		}
-		
 		StringBuilder sb = new StringBuilder(expectedNumber);
 		sb.deleteCharAt(expectedNumber.length() - 1);
 		Offer of = new Offer();
@@ -165,20 +185,19 @@ public class Offer implements Offerable {
 	 */
 	@Override
 	public String toString() {
-		return "Offer [customerid=" + Arrays.toString(key) + " timestamp=" + timestamp + ", " + "customerid " + numb + " loanRate=" + loanRate + " monthsPay=" + monthsPay + " accepted:" + estado +  "]\n";
+		return "Offer [offerid=" + offerid + " timestamp=" + timestamp + ", " + "customerid=" + offerorid + " loanRate=" + loanRate + " monthsPay=" + monthsPay + " accepted:" + estado + "]\n";
 	}
 
 	@Override
 	public List FindAll() {
 		try {
 			Connection conn = ConnectionUtil.connect();
-			String sql = "select * from \"offer\" where \"status\" = 'false'";
+			String sql = "select * from \"offer\" where \"sold\" = 'false'";
 			List<Offer> list = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			//int offer, String time, int offerorid, int loanRate, int monthsPay, boolean status
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				list.add(new Offer(rs.getInt(1), rs.getString(2),rs.getInt(3),rs.getInt(4),rs.getInt(5),rs.getBoolean(6)));
+				list.add(new Offer(rs.getInt(1), rs.getTimestamp(2),rs.getInt(3),rs.getInt(4),rs.getInt(5),rs.getBoolean(6)));
 			}
 			return list;
 			
@@ -188,24 +207,17 @@ public class Offer implements Offerable {
 			
 		return null;
 	}
-
-	@Override
-	public Object findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List findAllByTitle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
+	/**
+	 * This method allows offer creation 
+	 * by creating a car object 
+	 */
 	@Override
 	public void insert(Object c) {
 		try {
 			System.out.println(timestamp);
 			Offer ofs = new Offer();
+			ofs.setTimes1(timestamp);
 			Connection conn = ConnectionUtil.connect();
 			System.out.println("CREATING CAR OFFER:");
 			System.out.println("Enter the car id you would like to make an offer to:");
@@ -220,7 +232,6 @@ public class Offer implements Offerable {
 			price = rs.getDouble(1);
 			System.out.println(sale.toString());
 			}
-			
 			System.out.println("-------------------------------------------------");
 			System.out.println("How many months do you intend to pay for the car?");
 			ofs.setMonthsPay(kbd.nextInt());
@@ -241,36 +252,79 @@ public class Offer implements Offerable {
 	        System.out.println("The interest rate is 4%");
 	        System.out.println("Your monthly payment is: " + "USD " + df.format(fmpay));
 	        System.out.println("-----------------------------------------------");
-			System.out.println("Enter your last name for confirmation:");
+			System.out.println("Enter your username for confirmation:");
 			String user = kbd.next();
 				try {					
 				conn = ConnectionUtil.connect();
-				sql = "select \"customerid\" from \"customer\" where \"lastname\" = " +  "'" + user +"';";
+				sql = "select \"customerid\" from \"customer\" where \"user_name\" = " +  "'" + user +"';";
 				ps = conn.prepareStatement(sql);
 				rs = ps.executeQuery();
 				while(rs.next()){
 					key[0] = rs.getInt(1);
-				}
-					//
-					
-				sql = "insert into offer (timestamp, offeror, down, months) values('"+ timestamp + "'," + key[0]  + "," + ofs.getLoanRate() + "," + ofs.getMonthsPay() + ")";					ps = conn.prepareStatement(sql);
+					ofs.setOfferorid(key[0]);
+				}	
+				sql = "insert into offer (timestamp, offeror, down, months, carid) values('"+ ofs.getTimes() + "'," + ofs.getOfferorid()  + "," + ofs.getLoanRate() + "," + ofs.getMonthsPay() + ","+ cid + ")";					
+				ps = conn.prepareStatement(sql);
 				int ins = ps.executeUpdate();
 				System.out.println("Your offer has been sent to an employee.");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				
-
+				double remaining = price - down;
+				Payment pp = new Payment();
+				pp.pGeneration(fmpay,times,down,remaining,ofs.getOfferid(),cid);
+				conn = ConnectionUtil.connect();
+				sql = "insert into \"payment\" values("+ df.format(fmpay) + ",'" + ofs.getTimes() + "'," + down + ", " + remaining + "," + ofs.getOfferorid() + "," + cid + ")";
+				ps = conn.prepareStatement(sql);
+				int ins = ps.executeUpdate();
 			  }catch (SQLException e) {
 				e.printStackTrace();
 			} 
-		
 	}
-
+	
+	/**
+	 * Deletes an offer this is called
+	 * when an employee rejects an offer
+	 */
 	@Override
 	public void delete(Object c) {
-		// TODO Auto-generated method stub
-		
+		try {
+			Connection conn = ConnectionUtil.connect();
+			System.out.println("Enter the offer Id to reject an offer");	
+			String rem = kbd.nextLine();
+			String sql = "delete from \"offer\" where offerid = "+ rem +"";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int rs = ps.executeUpdate();
+			System.out.println("Offer rejected successfully");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+	}
+	
+	/**
+	 * Updates the values of the car and the 
+	 * offer when an offer get accepted by
+	 * the employee
+	 */
+	public void accept(Object c) {
+		try {
+			Connection conn = ConnectionUtil.connect();
+			System.out.println("Enter the offer Id to accept an offer");	
+			String rem = kbd.nextLine();
+			String sql = "delete from \"offer\" where offerid != "+ rem +"AND offeror != (Select offeror from offer where offerid = "+rem+") "
+					+ "and carid = (select carid from offer where offerid= "+rem+")";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int rs = ps.executeUpdate();
+			sql = "update car set ownerid = (select offeror from offer where carid = "+rem+") where carid = "+rem;
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeUpdate();
+			sql = "update offer set sold = true where carid = "+rem;
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeUpdate();
+			System.out.println("Offer accepted successfully other offers for the car have been rejected");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 	}
 }
 

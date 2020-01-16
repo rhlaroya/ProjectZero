@@ -33,6 +33,7 @@ public class Car implements Automotive, Serializable {
 	private String name;
 	private String specs;
 	private int carid;
+	private boolean status;
 	Scanner kbd = new Scanner(System.in);
 	
 	/**
@@ -64,12 +65,17 @@ public class Car implements Automotive, Serializable {
 	public void setMake(String make) {
 		this.make = make;
 	}
-	
 	public int getCarid() {
 		return carid;
 	}
 	public void setCarid(int carid) {
 		this.carid = carid;
+	}
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 	/**
@@ -80,7 +86,20 @@ public class Car implements Automotive, Serializable {
 	}
 	
 	/**
-	 * Car consructor
+	 * Car constructor
+	 */
+	public Car(double price, String make, String name, String specs, int carid,boolean status) {
+		super();
+		this.price = price;
+		this.make = make;
+		this.name = name;
+		this.specs = specs;
+		this.carid = carid;
+		this.status = status;
+	}
+	
+	/**
+	 * Car insertion constructor
 	 */
 	public Car(double price, String make, String name, String specs, int carid) {
 		super();
@@ -96,8 +115,12 @@ public class Car implements Automotive, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "USD " + price + " [make=" + make + ", name=" + name + ", specs=" + specs + " Serial No:" + carid +"]\n";
+		return "USD " + price + " [make=" + make + ", name=" + name + ", specs=" + specs + ", Serial No:" + carid + ", owned="+status+"]\n";
 	}
+	
+	/**
+	 * Grabs all the cars and puts them into a list
+	 */
 	@Override
 	public List FindAll() {
 		try {
@@ -105,29 +128,45 @@ public class Car implements Automotive, Serializable {
 			String sql = "select * from \"car\" order by \"carid\" asc";
 			List<Car> list = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				list.add(new Car(rs.getDouble(1), rs.getString(2),rs.getString(3),rs.getString(4),rs.getInt(5)));
+				list.add(new Car(rs.getDouble(1), rs.getString(2),rs.getString(3),rs.getString(4),rs.getInt(5),rs.getBoolean(6)));
 			}
 			return list;
-			
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	/**
+	 * Finds the cars owned by a customer
+	 * then adds it into a list
+	 */
+	public List FindMine() {
+		try {
+			String cmtn = kbd.next();
+			Connection conn = ConnectionUtil.connect();
+			String sql = "select * from \"car\" where ownerid = (select customerid from customer where user_name = '"+ cmtn +"') and sold = true;";
+			List<Car> mycar = new ArrayList<>();
+			PreparedStatement ps = conn.prepareStatement(sql);
 			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				mycar.add(new Car(rs.getDouble(1), rs.getString(2),rs.getString(3),rs.getString(4),rs.getInt(5),rs.getBoolean(6)));
+			}
+			return mycar;	
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
-	@Override
-	public Object findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List findAllByTitle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	/**
+	 * This method permits adding a car to the 
+	 * lot by getting the values and inserting
+	 * into the database
+	 */
 	@Override
 	public void insert(Object c) {
 		try {
@@ -149,13 +188,17 @@ public class Car implements Automotive, Serializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
+	
+	/**
+	 * This delete method deletes cars from
+	 * the database by using the carid
+	 */
 	@Override
 	public void delete(Object c) {
 		try {
 		Connection conn = ConnectionUtil.connect();
-		System.out.println("Enter the car id to remove car from lot");	
+		System.out.println("Enter the car serial no. to remove car from lot");	
 		String carno = kbd.nextLine();
 		String sql = "delete from \"car\" where carid = "+ carno +"";
 		PreparedStatement ps = conn.prepareStatement(sql);

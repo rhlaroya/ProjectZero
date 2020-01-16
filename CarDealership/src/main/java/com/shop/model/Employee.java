@@ -11,7 +11,6 @@ package com.shop.model;
  * ability to reject or accept and offer from a customer.
  */
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -22,15 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.shop.data.Serialization;
 import com.shop.data.ConnectionUtil;
 import com.shop.service.CarService;
 import com.shop.service.Employable;
 import com.shop.service.EmployeeService;
 import com.shop.service.OfferService;
+import com.shop.service.PaymentService;
 import com.shop.service.User;
 
-public class Employee extends User implements Serializable, Employable {
+public class Employee extends User implements Serializable, Employable{
 	
 	/**
 	 * Employee instance fields
@@ -116,18 +115,12 @@ public class Employee extends User implements Serializable, Employable {
 	}
 	
 	/**
-	 * This method allow the users to view the
+	 * This method allows the users to view the
 	 * cars on the lot. The cars are read from
 	 * the cars.txt
 	 */
 	@Override
 	public void viewCar() throws FileNotFoundException {
-//		Serialization s = new Serialization();
-//		List<Car> cars = s.readCarList("cars.txt");
-//		
-//		for(Car c: cars) {
-//			System.out.println(c.toString());
-//		}
 		CarService cs = new CarService();
 		List<Car> lists = cs.getList();
 		String liststrs = lists.toString().replace(",", "");
@@ -142,25 +135,6 @@ public class Employee extends User implements Serializable, Employable {
 	 */
 	@Override
 	public void addCar() {
-//		Car car = new Car();
-//		System.out.println("Enter the car make");
-//		car.setMake(kbd.next());
-//		System.out.println("Enter the car name");
-//		car.setName(kbd.next());
-//		System.out.println("Enter the car price");
-//		car.setPrice(kbd.nextDouble());
-//		System.out.println("Enter the car specs in one line");
-//		kbd.nextLine();
-//		car.setSpecs(kbd.nextLine());
-//		int counter = 0;
-//		for(Car c: cars) {
-//			System.out.println(counter+". "+c.toString());
-//			counter++;
-//		}
-//		cars.add(car);
-//		Serialization s = new Serialization();
-//		String filename = "cars.txt";
-//		s.writeCarList(filename, cars);
 		Car car = new Car();
 		car.insert(car);
 	}
@@ -173,22 +147,6 @@ public class Employee extends User implements Serializable, Employable {
 	 */
 	@Override
 	public void removeCar() {
-//		Serialization s = new Serialization();
-//		List<Car> cars = s.readCarList("cars.txt");
-//		int counter = 0;
-//		for(Car c: cars) {
-//			System.out.println(counter+". "+c.toString());
-//			counter++;
-//		}
-//		
-//		System.out.println("Enter the number of the car to remove: ");
-//		int index = kbd.nextInt();
-//		cars.remove(index);
-//		
-//		//Rewrite
-//		File file = new File("C:\\Users\\rhlar\\Desktop\\git repos\\1912dec16java\\regae_laroya_code\\CarDealership\\cars.txt");
-//		file.delete();
-//		s.writeCarList(filename, cars);
 		Car c = new Car();
 		c.delete(c);
 	}
@@ -206,27 +164,31 @@ public class Employee extends User implements Serializable, Employable {
 
 		System.out.println("OFFERS: ");
 		OfferService os = new OfferService();
+		Offer ofa = new Offer();
 		List<Offer> lists = os.getList();
 		String liststrs = lists.toString().replace(",", "");
 		System.out.println(liststrs);
-//		Serialization s = new Serialization();
-//		int y;
-//		System.out.println(s.readOffer("offers.txt") + " for " + s.readCarList("cars.txt"));
-//		System.out.println("\n"+"(1) Accept offer");
-//	    System.out.println("(2) Reject offer");
-//	    y = kbd.nextInt();
-//	    if(y == 1) {
-//	    	System.out.println("Offer accepted successfully");
-//	    	Offer fer = new Offer();
-//	    	String file = "payments.txt";
-//	    	s.writePayment(file, fer.pay);
-//	    } else if (y == 2) {
-//	    	System.out.println("Offer rejected successfully");
-//	    }
+		
+		System.out.println("Would you like to Accept or Reject Offers?");
+		System.out.println("(1) Accept");
+		System.out.println("(2) Reject");
+		int dec;
+		dec = kbd.nextInt();
+		if(dec==1) {
+			Offer fr = new Offer();
+			fr.accept(fr);
+		} else if (dec == 2) {
+			{
+				Offer fr = new Offer();
+				fr.delete(fr);
+			}
+		} else {
+			System.out.println("Wrong input");
+		}
 	}
 
 	/**
-	 * An existing employee has the capability
+	 * The manager has the capability
 	 * to add an employee. The existing employee
 	 * will be prompted to enter the necessary
 	 * information then creates a new employee
@@ -234,28 +196,28 @@ public class Employee extends User implements Serializable, Employable {
 	 */
 	@Override
 	public void addEmployee() {
-//		Employee e = new Employee();
-//		System.out.println("ADDING NEW EMPLOYEE");
-//		System.out.println("Fill up the necessary information");
-//		System.out.println("Username: ");
-//		e.setUser_name(kbd.next());
-//		System.out.println("Password: ");
-//		e.setPassword(kbd.next());
-//		System.out.println("First name: ");
-//		e.setFirstName(kbd.next());
-//		System.out.println("Last name: ");
-//		kbd.nextLine();
-//		e.setLastName(kbd.nextLine());
-//		employees.add(e);
-//		System.out.println("A new employee has been added.");
-//		String filename = "employees.txt";
-//		Serialization s = new Serialization();
-//		s.writeEmployeeList(filename, employees);
 		
 		Employee em = new Employee();
 		em.insert(em);
 		
 	}
+	
+	/**
+	 * This allows the manager to view all the payments
+	 * generated in the system
+	 */
+	public void viewAllPayments() {
+		PaymentService ps = new PaymentService();
+		List<Payment> lists = ps.getList();
+		String liststrs = lists.toString().replace(",", "");
+		System.out.println(liststrs);
+	}
+	
+	/**
+	 * This queries the employees of the database
+	 * assigns them as a Employee object then
+	 * puts them into an array.
+	 */
 	@Override
 	public List FindAll() {
 		try {
@@ -277,16 +239,11 @@ public class Employee extends User implements Serializable, Employable {
 			
 			
 	}
-	@Override
-	public Object findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List findAllByTitle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	/**
+	 * This method inserts created employee
+	 * accounts into the database
+	 */
 	@Override
 	public void insert(Object e) {
 	try {
@@ -304,33 +261,17 @@ public class Employee extends User implements Serializable, Employable {
 		kbd.nextLine();
 		em.setLastName(kbd.nextLine());
 		String sql = "insert into \"employee\" values('"+ em.getUser_name() + "','" + em.getPassword() + "','" + em.getFirstName() + "','" + em.getLastName() + "')";
-		
 		PreparedStatement ps = conn.prepareStatement(sql);
 		int ins = ps.executeUpdate();
 		System.out.println("A new employee has been added.");
 		} catch (SQLException ei) {
 			ei.printStackTrace();
 		}	
-		
-//		Car ca = new Car();
-//		Connection conn = ConnectionUtil.connect();
-//		System.out.println("Enter the car make");
-//		ca.setMake(kbd.next());
-//		System.out.println("Enter the model");
-//		ca.setName(kbd.next());
-//		System.out.println("Enter the price of the car");
-//		ca.setPrice(kbd.nextDouble());
-//		System.out.println("Enter the specs");
-//		kbd.nextLine();
-//		ca.setSpecs(kbd.nextLine());
-//		String sql = "insert into \"car\" values("+ ca.getPrice() + ",'" + ca.getMake() + "','" + ca.getName() + "','" + ca.getSpecs() + "')";
-//		PreparedStatement ps = conn.prepareStatement(sql);
-//		int ins = ps.executeUpdate();
-//		System.out.println("Car successfully removed");
-//		} catch (SQLException ei) {
-//			ei.printStackTrace();
-//		}	
 	}
+	
+	/**
+	 * Allows the manager to fire an employee
+	 */
 	@Override
 	public void delete(Object e) {
 		try {
@@ -343,14 +284,20 @@ public class Employee extends User implements Serializable, Employable {
 			System.out.println("Employee successfully removed");
 			} catch (SQLException e1) {
 				e1.printStackTrace();
-			}
-		
+		}
 	}
 	
+	/**
+	 * Grabs all employees from the database then
+	 * puts them in a list to easily iterate through 
+	 * it
+	 */
 	public void viewAllEmployees() {
 		EmployeeService es = new EmployeeService();
 		List<Employee> list = es.getList();
 		String liststr = list.toString().replace(",", "");
 		System.out.println(liststr);
 	}
+
+
 }

@@ -16,13 +16,12 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.shop.data.ConnectionUtil;
-import com.shop.data.Serialization;
 import com.shop.service.CarService;
+import com.shop.service.PaymentService;
 import com.shop.service.Serviceable;
 import com.shop.service.User;
 
@@ -113,12 +112,6 @@ public class Customer extends User implements Serializable, Serviceable {
 	 */
 	@Override
 	public void viewCar() {
-//		Serialization s = new Serialization();
-//		List<Car> cars = s.readCarList("cars.txt");
-//		
-//		for(Car c: cars) {
-//			System.out.println(c.toString());
-//		}
 		CarService cs = new CarService();
 		List<Car> lists = cs.getList();
 		String liststrs = lists.toString().replace(",", "");
@@ -145,10 +138,10 @@ public class Customer extends User implements Serializable, Serviceable {
 	 */
 	@Override
 	public void viewPayments() {
-		Payment p = new Payment();
-		p.revealPayment();
-		Serialization s = new Serialization();
-		System.out.println("USD" + s.readPayment("payments.txt"));
+		PaymentService ps = new PaymentService();
+		List<Payment> mypay = ps.getList();
+		String liststrs = mypay.toString().replace(",", "");
+		System.out.println(liststrs);
 	}
 	
 	/**
@@ -157,67 +150,43 @@ public class Customer extends User implements Serializable, Serviceable {
 	 */
 	@Override
 	public void register() {
-//		Serialization s = new Serialization();
-//		java.util.Scanner kbd = new java.util.Scanner(System.in);
-//		Customer c = new Customer();
-//		System.out.println("CUSTOMER REGISTRATION");
-//		System.out.println("Please enter the following information: ");
-//		System.out.println("Username: ");
-//		c.setUser_name(kbd.next());
-//		System.out.println("Password: ");
-//		c.setPassword(kbd.next());
-//		System.out.println("First name: ");
-//		c.setFirstName(kbd.next());
-//		System.out.println("Last name: ");
-//		kbd.nextLine();
-//		c.setLastName(kbd.nextLine());
-//		System.out.println("Money Balance: ");
-//		c.setMoney_balance(kbd.nextDouble());
-//		System.out.println("Thank you! Customer Account Created");
-//		List<Customer> customers = new ArrayList<>();
-//		customers.add(c);
-//		String filename = "customers.txt";
-//		s.writeCustomerList(filename, customers);
-	try {
-		Customer cu = new Customer();
-		Connection conn = ConnectionUtil.connect();
-		System.out.println("CUSTOMER REGISTRATION");
-		System.out.println("Please enter the following information: ");
-		System.out.println("Username: ");
-		cu.setUser_name(kbd.next());
-		System.out.println("Password: ");
-		cu.setPassword(kbd.next());
-		System.out.println("First name: ");
-		cu.setFirstName(kbd.next());
-		System.out.println("Last name: ");
-		kbd.nextLine();
-		cu.setLastName(kbd.nextLine());
-		System.out.println("Money Balance: ");
-		cu.setMoney_balance(kbd.nextDouble());
-		String sql = "insert into \"customer\" values('"+ cu.getUser_name() + "','" + cu.getPassword() + "','" + cu.getFirstName() + "','" + cu.getLastName() + "'," + cu.getMoney_balance() + ")";
-		PreparedStatement ps = conn.prepareStatement(sql);
-		int ins = ps.executeUpdate();
-		System.out.println("Thank you! Customer Account Created");
-	} catch(SQLException e) {
-		e.printStackTrace();
+		try {
+			Customer cu = new Customer();
+			Connection conn = ConnectionUtil.connect();
+			System.out.println("CUSTOMER REGISTRATION");
+			System.out.println("Please enter the following information: ");
+			System.out.println("Username: ");
+			cu.setUser_name(kbd.next());
+			System.out.println("Password: ");
+			cu.setPassword(kbd.next());
+			System.out.println("First name: ");
+			cu.setFirstName(kbd.next());
+			System.out.println("Last name: ");
+			kbd.nextLine();
+			cu.setLastName(kbd.nextLine());
+			System.out.println("Money Balance: ");
+			cu.setMoney_balance(kbd.nextDouble());
+			String sql = "insert into \"customer\" values('"+ cu.getUser_name() + "','" + cu.getPassword() + "','" + cu.getFirstName() + "','" + cu.getLastName() + "'," + cu.getMoney_balance() + ")";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int ins = ps.executeUpdate();
+			System.out.println("Thank you! Customer Account Created");
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 		
-	
+	/**
+	 * Puts all customers into a list
+	 */
 	public List<Customer> FindAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public Object findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List findAllByTitle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	/**
+	 * Allows the adding of a new 
+	 * customer account
+	 */
 	@Override
 	public void insert(Object c) {
 		try {
@@ -245,10 +214,27 @@ public class Customer extends User implements Serializable, Serviceable {
 		}
 		
 	}
+	
+	/**
+	 * Deletes a customer
+	 */
 	@Override
 	public void delete(Object c) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/**
+	 * Finds a car owned by a customer
+	 */
+	@Override
+	public void viewOwnedCars() {
+		CarService cs = new CarService();
+		List<Car> mycar = cs.getList();
+		String liststrs = mycar.toString().replace(",", "");
+		System.out.println(liststrs);	
+	}
+	
+
 	
 }
